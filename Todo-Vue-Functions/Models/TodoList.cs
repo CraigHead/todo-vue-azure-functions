@@ -8,7 +8,7 @@ namespace Todo.Vue.Functions.Models
 {
     internal class TodoList
     {
-        public Guid Id { get; set; }
+        public string Id { get; set; }
         public string Name { get; set; }
         public IEnumerable<Item> Items { get; set; }
     }

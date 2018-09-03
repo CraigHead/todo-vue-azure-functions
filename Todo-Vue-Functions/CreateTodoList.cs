@@ -49,7 +49,7 @@ namespace Todo.Vue.Functions
             TableOperation insertOperation = TableOperation.Insert(listEntity);
 
             table.Execute(insertOperation);
-            newList.Id = newItemGuid;
+            newList.Id = newItemGuid.ToString();
 
             return req.CreateResponse(HttpStatusCode.OK, newList);
         }

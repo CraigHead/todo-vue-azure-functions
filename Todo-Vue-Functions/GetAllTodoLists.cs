@@ -41,7 +41,7 @@ namespace Todo.Vue.Functions
             foreach (TodoListEntity todoListEntity in results)
             {
                 TodoList result = new TodoList();
-                result.Id = Guid.Parse(todoListEntity.RowKey);
+                result.Id = todoListEntity.RowKey;
                 result.Items = todoListEntity.Items_VC;
                 result.Name = todoListEntity.Name_VC;
 
