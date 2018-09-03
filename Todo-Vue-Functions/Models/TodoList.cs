@@ -10,6 +10,13 @@ namespace Todo.Vue.Functions.Models
         IEnumerable<Item> Items { get; set; }
     }
 
+    internal class TodoList : ITodoList
+    {
+        public string Id { get; set; }
+        public string Name { get; set; }
+        public IEnumerable<Item> Items { get; set; }
+    }
+
     internal class TodoListEntity : TableEntity, ITodoList
     {
         public TodoListEntity(string key, string row)

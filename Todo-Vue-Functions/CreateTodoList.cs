@@ -24,7 +24,7 @@ namespace Todo.Vue.Functions
             log.Info("C# HTTP trigger function processed a request.");
 
             string body = await req.Content.ReadAsStringAsync();
-            ITodoList newList = JsonConvert.DeserializeObject<ITodoList>(body);
+            ITodoList newList = JsonConvert.DeserializeObject<TodoList>(body);
 
             // Define the row,
             string newItemGuid = Guid.NewGuid().ToString();
