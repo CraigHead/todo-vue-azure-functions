@@ -34,6 +34,7 @@ namespace Todo.Vue.Functions
             TodoListEntity listEntity = new TodoListEntity("todovue", newItemGuid.ToString());
 
             listEntity.Name_VC = newList.Name;
+            listEntity.Items_VC = new List<Item>();
             
 
             // Connect to the Storage account.
