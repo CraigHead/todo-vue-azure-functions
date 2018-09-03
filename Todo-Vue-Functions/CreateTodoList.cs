@@ -1,7 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Drawing.Text;
-using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
@@ -13,9 +11,11 @@ using Microsoft.WindowsAzure.Storage.Auth;
 using Microsoft.WindowsAzure.Storage.Table;
 using Newtonsoft.Json;
 using Todo.Vue.Functions.Models;
+using Todo.Vue.Functions.Storage;
 
 namespace Todo.Vue.Functions
 {
+    // ReSharper disable once UnusedMember.Global
     public static class CreateTodoList
     {
         [FunctionName("CreateTodoList")]
@@ -24,55 +24,28 @@ namespace Todo.Vue.Functions
             log.Info("C# HTTP trigger function processed a request.");
 
             string body = await req.Content.ReadAsStringAsync();
-            TodoList newList = JsonConvert.DeserializeObject<TodoList>(body);
+            ITodoList newList = JsonConvert.DeserializeObject<ITodoList>(body);
 
             // Define the row,
-            Guid newItemGuid = Guid.NewGuid();
+            string newItemGuid = Guid.NewGuid().ToString();
 
             // Create the Entity and set the partition to signup, 
-            
-            TodoListEntity listEntity = new TodoListEntity("todovue", newItemGuid.ToString());
+            TodoListEntity listEntity = new TodoListEntity("todovue", newItemGuid);
 
-            listEntity.Name_VC = newList.Name;
-            listEntity.Items_VC = new List<Item>();
-            
+            listEntity.Id = newItemGuid;
+            listEntity.Name = newList.Name;
+            listEntity.Items = new List<Item>();
 
-            // Connect to the Storage account.
-            StorageCredentials credentials = new StorageCredentials("todovue", "flvLRKfCXMSNE3r9NWmPdI1BJ6Obr4Mnd+HdKTrkBmjrETwrUsi5fg+Y+IFtf9hCzm6S1PoaX+PyDMU0R6g01A==");
-            CloudStorageAccount storageAccount = new CloudStorageAccount(credentials, true);
-
-            CloudTableClient tableClient = storageAccount.CreateCloudTableClient();
-
-            CloudTable table = tableClient.GetTableReference("todoLists");
-
-            table.CreateIfNotExists();
+            TodoListTableStorage storage = new TodoListTableStorage();
+            CloudTable table = storage.GetCloudTableReference();
 
             TableOperation insertOperation = TableOperation.Insert(listEntity);
 
             table.Execute(insertOperation);
-            newList.Id = newItemGuid.ToString();
+            newList.Id = newItemGuid;
 
             return req.CreateResponse(HttpStatusCode.OK, newList);
         }
 
-        
-
-
-        
-
-        private class TodoListEntity : TableEntity
-        {
-            public TodoListEntity(string skey, string srow)
-            {
-                this.PartitionKey = skey;
-                this.RowKey = srow;
-            }
-
-            public TodoListEntity() { }
-
-            public Guid Id_VC { get; set; }
-            public string Name_VC { get; set; }
-            public IEnumerable<Item> Items_VC { get; set; }
-        }
-}
+    }
 }

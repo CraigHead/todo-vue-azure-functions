@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Todo.Vue.Functions.Models
+﻿namespace Todo.Vue.Functions.Models
 {
     internal class Item
     {
