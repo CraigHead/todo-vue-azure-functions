@@ -47,9 +47,10 @@ namespace Todo.Vue.Functions
 
                 items.Add(result);
             }
-            
 
-            return req.CreateResponse(HttpStatusCode.OK, items);
+            var awaitedResult = await Task.FromResult(items);
+
+            return req.CreateResponse(HttpStatusCode.OK, awaitedResult);
         }
         
         private class TodoListEntity : TableEntity
