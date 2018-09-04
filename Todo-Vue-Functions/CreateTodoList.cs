@@ -6,8 +6,6 @@ using System.Threading.Tasks;
 using Microsoft.Azure.WebJobs;
 using Microsoft.Azure.WebJobs.Extensions.Http;
 using Microsoft.Azure.WebJobs.Host;
-using Microsoft.WindowsAzure.Storage;
-using Microsoft.WindowsAzure.Storage.Auth;
 using Microsoft.WindowsAzure.Storage.Table;
 using Newtonsoft.Json;
 using Todo.Vue.Functions.Models;
@@ -21,10 +19,12 @@ namespace Todo.Vue.Functions
         [FunctionName("CreateTodoList")]
         public static async Task<HttpResponseMessage> Run([HttpTrigger(AuthorizationLevel.Function, "post", Route = null)]HttpRequestMessage req, TraceWriter log)
         {
-            log.Info("C# HTTP trigger function processed a request.");
+            log.Info("CreateTodoList Invoked.");
 
             string body = await req.Content.ReadAsStringAsync();
             ITodoList<IEnumerable<Item>> newList = JsonConvert.DeserializeObject<TodoList>(body);
+
+            log.Info($"CreateTodoList Name: {newList.Name}.");
 
             // Define the row,
             string newItemGuid = Guid.NewGuid().ToString();
@@ -41,7 +41,7 @@ namespace Todo.Vue.Functions
 
             TableOperation insertOperation = TableOperation.Insert(listEntity);
 
-            table.Execute(insertOperation);
+            await table.ExecuteAsync(insertOperation);
             newList.Id = newItemGuid;
 
             return req.CreateResponse(HttpStatusCode.OK, newList);
