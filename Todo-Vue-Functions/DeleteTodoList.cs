@@ -28,7 +28,7 @@ namespace Todo.Vue.Functions
 
             log.Info($"DeleteTodoList Id: {id}.");
 
-            TableEntity item = new TableEntity(id, id)
+            TableEntity item = new TableEntity("todovue", id)
             {
                 ETag = "*" //By default, the SDK enforces optimistic concurrency via ETags. Set this value to '*' in order to force an overwrite to an entity as part of an update operation.
             };
