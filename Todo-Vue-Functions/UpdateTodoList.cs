@@ -32,6 +32,8 @@ namespace Todo.Vue.Functions
             TodoListEntity updateEntity = new TodoListEntity("todovue", inputList.Id);
 
             updateEntity.Items = JsonConvert.SerializeObject(inputList.Items);
+            updateEntity.Name = inputList.Name;
+            updateEntity.Id = inputList.Id;
             updateEntity.ETag = "*"; //By default, the SDK enforces optimistic concurrency via ETags. Set this value to '*' in order to force an overwrite to an entity as part of an update operation.
 
             TableOperation operation = TableOperation.Replace(updateEntity);
