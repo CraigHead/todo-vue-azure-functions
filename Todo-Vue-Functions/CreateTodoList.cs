@@ -24,7 +24,7 @@ namespace Todo.Vue.Functions
             log.Info("C# HTTP trigger function processed a request.");
 
             string body = await req.Content.ReadAsStringAsync();
-            ITodoList newList = JsonConvert.DeserializeObject<TodoList>(body);
+            ITodoList<IEnumerable<Item>> newList = JsonConvert.DeserializeObject<TodoList>(body);
 
             // Define the row,
             string newItemGuid = Guid.NewGuid().ToString();
@@ -34,7 +34,7 @@ namespace Todo.Vue.Functions
 
             listEntity.Id = newItemGuid;
             listEntity.Name = newList.Name;
-            listEntity.Items = new List<Item>();
+            listEntity.Items = JsonConvert.SerializeObject(new List<Item>());
 
             TodoListTableStorage storage = new TodoListTableStorage();
             CloudTable table = storage.GetCloudTableReference();

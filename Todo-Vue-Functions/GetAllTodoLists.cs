@@ -9,6 +9,7 @@ using Microsoft.Azure.WebJobs.Host;
 using Microsoft.WindowsAzure.Storage;
 using Microsoft.WindowsAzure.Storage.Auth;
 using Microsoft.WindowsAzure.Storage.Table;
+using Newtonsoft.Json;
 using Todo.Vue.Functions.Models;
 using Todo.Vue.Functions.Storage;
 
@@ -28,10 +29,14 @@ namespace Todo.Vue.Functions
             TableQuery<TodoListEntity> query = new TableQuery<TodoListEntity>();
             var results = storage.GetCloudTableReference().ExecuteQuery(query);
 
-            List<ITodoList> items = new List<ITodoList>();
+            List<ITodoList<IEnumerable<Item>>> items = new List<ITodoList<IEnumerable<Item>>>();
             foreach (TodoListEntity todoListEntity in results)
             {
-                items.Add(todoListEntity);
+                TodoList resultItem = new TodoList();
+                resultItem.Id = todoListEntity.Id;
+                resultItem.Name = todoListEntity.Name;
+                resultItem.Items = JsonConvert.DeserializeObject<IEnumerable<Item>>(todoListEntity.Items);
+                items.Add(resultItem);
             }
 
             var awaitedResult = await Task.FromResult(items);

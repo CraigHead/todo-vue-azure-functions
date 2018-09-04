@@ -3,21 +3,21 @@ using Microsoft.WindowsAzure.Storage.Table;
 
 namespace Todo.Vue.Functions.Models
 {
-    internal interface ITodoList
+    internal interface ITodoList<TItemsType>
     {
         string Id { get; set; }
         string Name { get; set; }
-        IEnumerable<Item> Items { get; set; }
+        TItemsType Items { get; set; }
     }
 
-    internal class TodoList : ITodoList
+    internal class TodoList : ITodoList<IEnumerable<Item>>
     {
         public string Id { get; set; }
         public string Name { get; set; }
         public IEnumerable<Item> Items { get; set; }
     }
 
-    internal class TodoListEntity : TableEntity, ITodoList
+    internal class TodoListEntity : TableEntity, ITodoList<string>
     {
         public TodoListEntity(string key, string row)
         {
@@ -28,6 +28,6 @@ namespace Todo.Vue.Functions.Models
 
         public string Id { get; set; }
         public string Name { get; set; }
-        public IEnumerable<Item> Items { get; set; }
+        public string Items { get; set; }
     }
 }
